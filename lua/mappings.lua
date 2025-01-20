@@ -188,19 +188,21 @@ map("n", "<leader>u", vim.cmd.UndotreeToggle, { desc = "undo toggle Undotree" })
 -- map({ "n", "v" }, "l", "<nop>")
 --
 
-map("n", "<leader>g", function()
-  require("nvchad.term").runner {
-    cmd = "lazygit",
-    id = "lazygit_term",
-    pos = "float",
-    float_opts = {
-      row = 0.05,
-      col = 0.05,
-      width = 0.9,
-      height = 0.9,
-    },
-  }
-end)
+map("n", "<leader>g", ":!kitty --start-as=maximized lazygit &<CR><CR>")
+
+-- map("n", "<leader>g", function()
+--   require("nvchad.term").runner {
+--     cmd = "lazygit",
+--     id = "lazygit_term",
+--     pos = "float",
+--     float_opts = {
+--       row = 0.05,
+--       col = 0.05,
+--       width = 0.9,
+--       height = 0.9,
+--     },
+--   }
+-- end)
 
 map("n", "<C-b>", "<cmd> DapToggleBreakpoint <CR>", { desc = "Add breakpoint at line" })
 map("n", "<C-.>", "<cmd> DapContinue <CR>", { desc = "Start or continue the debugger" })
@@ -215,7 +217,7 @@ vim.api.nvim_create_autocmd("FileType", {
   callback = function()
     local startWL = function()
       io.popen "kitty -o allow_remote_control=yes --listen-on unix:/tmp/kitty_wolfram WolframKernel&"
-      io.popen "kitten @ --to unix:/tmp/mykitty send-text 'WolframKernel\r' &"
+      -- io.popen "kitten @ --to unix:/tmp/mykitty send-text 'WolframKernel\r' &"
     end
 
     local function get_visual_selection()
@@ -243,9 +245,9 @@ vim.api.nvim_create_autocmd("FileType", {
       io.popen('kitten @ --to unix:/tmp/kitty_wolfram  send-text "' .. text .. '\r" &')
     end
 
-    map("n", "<leader>ll", startWL, {buffer = true})
-    map("n", "<leader>r", "mrvip:lua runWL()<CR>`r", {buffer = true})
-    map("v", "<leader>r", runWL, {buffer = true})
+    map("n", "<leader>ll", startWL, { buffer = true })
+    map("n", "<leader>r", "mrvip:lua runWL()<CR>`r", { buffer = true })
+    map("v", "<leader>r", runWL, { buffer = true })
 
     -- nm("<leader>rr", "<Plug>SnipRun" )
     -- nm("<leader>r", "<Plug>SnipRunOperator")
@@ -253,46 +255,46 @@ vim.api.nvim_create_autocmd("FileType", {
     -- nm("<leader>R", "<Plug>SnipReset")
     -- nm("<leader>RL", "<Plug>SnipLive")
 
-    map("i", "\\a", "\\[Alpha]", {buffer = true})
-    map("i", "\\b", "\\[Beta]", {buffer = true})
-    map("i", "\\g", "\\[Gamma]", {buffer = true})
-    map("i", "\\G", "\\[CapitalGamma]", {buffer = true})
-    map("i", "\\d", "\\[Delta]", {buffer = true})
-    map("i", "\\D", "\\[CapitalDelta]", {buffer = true})
-    map("i", "\\e", "\\[CurlyEpsion]", {buffer = true})
-    map("i", "\\z", "\\[Zeta]", {buffer = true})
-    map("i", "`h", "\\[Eta]", {buffer = true})
-    map("i", "`o", "\\[Theta]", {buffer = true})
-    map("i", "``o", "\\[CapitalTheta]", {buffer = true})
-    map("i", "\\q", "\\[Theta]", {buffer = true})
-    map("i", "\\Q", "\\[CapitalTheta]", {buffer = true})
+    map("i", "\\a", "\\[Alpha]", { buffer = true })
+    map("i", "\\b", "\\[Beta]", { buffer = true })
+    map("i", "\\g", "\\[Gamma]", { buffer = true })
+    map("i", "\\G", "\\[CapitalGamma]", { buffer = true })
+    map("i", "\\d", "\\[Delta]", { buffer = true })
+    map("i", "\\D", "\\[CapitalDelta]", { buffer = true })
+    map("i", "\\e", "\\[CurlyEpsion]", { buffer = true })
+    map("i", "\\z", "\\[Zeta]", { buffer = true })
+    map("i", "`h", "\\[Eta]", { buffer = true })
+    map("i", "`o", "\\[Theta]", { buffer = true })
+    map("i", "``o", "\\[CapitalTheta]", { buffer = true })
+    map("i", "\\q", "\\[Theta]", { buffer = true })
+    map("i", "\\Q", "\\[CapitalTheta]", { buffer = true })
     -- im('<A-i>', "\iota]])
     -- im('<A-k>', "\kappa]])
-    map("i", "`l", "\\[Lambda]", {buffer = true})
-    map("i", "`L", "\\[CapitalLambda]", {buffer = true})
-    map("i", "`m", "\\[Mu]", {buffer = true})
-    map("i", "`n", "\\[Nu]", {buffer = true})
-    map("i", "\\x", "\\[xi]", {buffer = true})
-    map("i", "\\X", "\\[Xi]", {buffer = true})
+    map("i", "`l", "\\[Lambda]", { buffer = true })
+    map("i", "`L", "\\[CapitalLambda]", { buffer = true })
+    map("i", "`m", "\\[Mu]", { buffer = true })
+    map("i", "`n", "\\[Nu]", { buffer = true })
+    map("i", "\\x", "\\[xi]", { buffer = true })
+    map("i", "\\X", "\\[Xi]", { buffer = true })
     -- o O
-    map("i", "`p", "\\[Pi]", {buffer = true})
-    map("i", "``p", "\\[CapitalPi]", {buffer = true})
-    map("i", "\\r", "\\[Rho]", {buffer = true})
-    map("i", "\\s", "\\[Sigma]", {buffer = true})
-    map("i", "\\S", "\\[CapitalSigma]", {buffer = true})
-    map("i", "\\t", "\\[Tau]", {buffer = true})
-    map("i", "`u", "\\[Upsilon]", {buffer = true})
-    map("i", "``u", "\\[CapitalUpsilon]", {buffer = true})
-    map("i", "\\f", "\\[CurlyPhi]", {buffer = true})
-    map("i", "\\F", "\\[CapitalPhi]", {buffer = true})
-    map("i", "\\c", "\\[Chi]", {buffer = true})
-    map("i", "\\C", "\\[CapitalChi]", {buffer = true})
-    map("i", "`j", "\\[Psi]", {buffer = true})
-    map("i", "``j", "\\[CapitalPsi]", {buffer = true})
-    map("i", "`y", "\\[Psi]", {buffer = true})
-    map("i", "``y", "\\[CapitalPsi]", {buffer = true})
-    map("i", "\\w", "\\[omega]", {buffer = true})
-    map("i", "\\W", "\\[Omega]", {buffer = true})
+    map("i", "`p", "\\[Pi]", { buffer = true })
+    map("i", "``p", "\\[CapitalPi]", { buffer = true })
+    map("i", "\\r", "\\[Rho]", { buffer = true })
+    map("i", "\\s", "\\[Sigma]", { buffer = true })
+    map("i", "\\S", "\\[CapitalSigma]", { buffer = true })
+    map("i", "\\t", "\\[Tau]", { buffer = true })
+    map("i", "`u", "\\[Upsilon]", { buffer = true })
+    map("i", "``u", "\\[CapitalUpsilon]", { buffer = true })
+    map("i", "\\f", "\\[CurlyPhi]", { buffer = true })
+    map("i", "\\F", "\\[CapitalPhi]", { buffer = true })
+    map("i", "\\c", "\\[Chi]", { buffer = true })
+    map("i", "\\C", "\\[CapitalChi]", { buffer = true })
+    map("i", "`j", "\\[Psi]", { buffer = true })
+    map("i", "``j", "\\[CapitalPsi]", { buffer = true })
+    map("i", "`y", "\\[Psi]", { buffer = true })
+    map("i", "``y", "\\[CapitalPsi]", { buffer = true })
+    map("i", "\\w", "\\[omega]", { buffer = true })
+    map("i", "\\W", "\\[Omega]", { buffer = true })
   end,
 })
 
@@ -312,18 +314,18 @@ vim.api.nvim_create_autocmd("FileType", {
     -- map("n", "<leader>r", ":w<CR>:make -C %:p:h run FILE=%:p<CR>")
     -- map("n", "<leader>R", ":w<CR>:!kitty --hold -d %:p:h make run %:t:r & <CR><CR>")
 
-    map("n", "<leader>rr", ":w | !kitty --hold ~/.config/nvim/scripts/cpprun \"%\" &<CR><CR>")
+    -- map("n", "<leader>rr", ":w | !kitty --hold --title 'c++' --start-as=fullscreen cr \"%\" &<CR><CR>")
 
+    local run_kitty = " kitty --hold -o allow_remote_control=yes --listen-on unix:/tmp/kitty_cpp "
 
+    local send_to_kitty = " kitten @ --to unix:/tmp/kitty_cpp send-text "
 
-    -- map({ "n", "t" }, "<leader>r", function()
-    --   require("nvchad.term").runner {
-    --     pos = "vsp",
-    --     size = 0.33,
-    --     cmd = "make run",
-    --     clear_cmd = false,
-    --     id = "makeRunTerm",
-    --   }
-    -- end)
+    local run_cr = 'cr "%:p"\\\\r'
+
+    local send_to_kitty_cr = "(" .. send_to_kitty .. run_cr .. ")"
+    local run_kitty_cr = "(" .. run_kitty .. run_cr .. ")"
+
+    map("n", "<leader>rr", ":w | !" .. send_to_kitty_cr .. " || " .. run_kitty_cr .. "&<CR><CR>")
+
   end,
 })
