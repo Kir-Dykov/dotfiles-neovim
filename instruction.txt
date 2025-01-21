@@ -1,4 +1,3 @@
-
 To make srcripts available system-wise:
 
 chmod +x scripts/cr

@@ -4,16 +4,16 @@ return {
   sources = {
     null_ls.builtins.formatting.clang_format,
   },
-  on_attach = function (client, bufnr)
+  on_attach = function (client, buff)
     vim.api.nvim_clear_autocmds({
       group = augroup,
-      buffer = bufrn,
+      buffer = buff,
     })
     vim.api.nvim_create_autocmd("BufWritePre", {
       group = augroup,
-      buffer = bufnr,
+      buffer = buff,
       callback = function ()
-        vim.lsp.buf.format({ bufnr = bufnr })
+        vim.lsp.buf.format({ bufnr = buff })
       end
     })
   end

@@ -38,23 +38,41 @@ return {
   {
     "rcarriga/nvim-dap-ui",
     event = "VeryLazy",
-    dependencies = { "mfussenegger/nvim-dap", "nvim-neotest/nvim-nio" },
+    dependencies = { "mfussenegger/nvim-dap", "nvim-neotest/nvim-nio", "theHamsta/nvim-dap-virtual-text" },
     config = function()
       local dap = require "dap"
       local dapui = require "dapui"
+      local dapvt = require "nvim-dap-virtual-text"
       dapui.setup()
+      dapvt.setup()
       dap.listeners.before.attach.dapui_config = function()
         dapui.open()
       end
       dap.listeners.before.launch.dapui_config = function()
         dapui.open()
       end
-      dap.listeners.before.event_terminated.dapui_config = function()
-        dapui.close()
-      end
-      dap.listeners.before.event_exited.dapui_config = function()
-        dapui.close()
-      end
+      -- dap.listeners.before.event_terminated.dapui_config = function()
+      --   dapui.close()
+      -- end
+      -- dap.listeners.before.event_exited.dapui_config = function()
+      --   dapui.close()
+      -- end
+
+      dap.configurations.cpp = {
+        {
+          name = "Launch file",
+          type = "codelldb",
+          request = "launch",
+          program = function()
+            -- return vim.fn.input("Path to your best executable: ", vim.fn.getcwd() .. "/", "file")
+            return vim.fn.expand("%:p:r") .. ".o"
+          end,
+          cwd = "${workspaceFolder}",
+          stopOnEntry = false,
+          -- reverseDebugging = true,
+        },
+      }
+
       -- dap.listeners.after.event_initialized["dapui_config"] = function()
       --   dapui.open()
       -- end
@@ -66,6 +84,7 @@ return {
       -- end
     end,
   },
+
   {
     "jay-babu/mason-nvim-dap.nvim",
     event = "VeryLazy",
@@ -80,12 +99,7 @@ return {
       },
     },
   },
-  {
-    "mfussenegger/nvim-dap",
-    -- config = function(_, _)
-    --   require("nvchad.core.utils").load_mappings("dap")
-    -- end
-  },
+
   {
     "lervag/vimtex",
     ft = "tex",
@@ -114,4 +128,5 @@ return {
   },
   -- { "rsmenon/vim-mathematica", event = "VeryLazy" },
   -- { "rsmenon/vim-mathematica", event = "VeryLazy" },
+  --
 }

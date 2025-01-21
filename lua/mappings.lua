@@ -85,7 +85,8 @@ map(
 
 -- terminal
 -- map("t", "<C-x>", "<C-\\><C-N>", { desc = "terminal escape terminal mode" })
-map("t", "<Esc>", "<C-\\><C-N>", { desc = "terminal escape terminal mode" })
+map("t", "<Esc>", "<C-\\><C-n>", { desc = "terminal escape terminal mode" })
+map("t", "", "<C-\\><C-n>", { desc = "terminal escape terminal mode" })
 
 -- new terminals
 -- map("n", "<leader>h", function()
@@ -100,6 +101,7 @@ map("t", "<Esc>", "<C-\\><C-N>", { desc = "terminal escape terminal mode" })
 map({ "n", "t" }, "<leader>v", function()
   require("nvchad.term").toggle { pos = "vsp", id = "vtoggleTerm" }
 end, { desc = "terminal toggleable vertical term" })
+
 --
 map({ "n", "t" }, "<leader>h", function()
   require("nvchad.term").toggle { pos = "sp", id = "htoggleTerm" }
@@ -118,8 +120,8 @@ end, { desc = "whichkey query lookup" })
 
 -- add yours here
 --
-map({ "n", "i", "v", "t", "c" }, "", "<Esc>", { noremap = false, desc = "Remap of CapsLock to Esc" })
-map({ "n", "i", "v", "t", "c" }, "<Esc>", "<Esc><cmd>noh<CR>", { noremap = false, desc = "Remap of CapsLock to Esc" })
+map({ "n", "i", "v", "c" }, "", "<Esc>", { noremap = false, desc = "Remap of CapsLock to Esc" })
+map({ "n", "i", "v", "c" }, "<Esc>", "<Esc><cmd>noh<CR>", { noremap = false, desc = "Remap of CapsLock to Esc" })
 
 map({ "n", "i", "v" }, "<C-s>", "<cmd> w <cr>", { desc = "general save file" })
 -- map("n", "<C-c>", "<cmd>%y+<CR>", { desc = "general copy whole file" })
@@ -188,24 +190,23 @@ map("n", "<leader>u", vim.cmd.UndotreeToggle, { desc = "undo toggle Undotree" })
 -- map({ "n", "v" }, "l", "<nop>")
 --
 
-map("n", "<leader>g", ":!kitty --start-as=maximized lazygit &<CR><CR>")
+-- map("n", "<leader>g", ":!kitty --start-as=maximized lazygit &<CR><CR>")
 
+map("n", "<leader>g", ":term<CR>ilazygit && exit<CR>")
 -- map("n", "<leader>g", function()
---   require("nvchad.term").runner {
---     cmd = "lazygit",
---     id = "lazygit_term",
---     pos = "float",
---     float_opts = {
---       row = 0.05,
---       col = 0.05,
---       width = 0.9,
---       height = 0.9,
---     },
---   }
+-- require("nvchad.term").runner {
+--   cmd = "lazygit && exit\n",
+--   id = "lazygit_term",
+--   pos = "float",
+--   float_opts = {
+--     row = 0.01,
+--     col = 0.01,
+--     width = 0.98,
+--     height = 0.98,
+--   },
+-- }
 -- end)
 
-map("n", "<C-b>", "<cmd> DapToggleBreakpoint <CR>", { desc = "Add breakpoint at line" })
-map("n", "<C-.>", "<cmd> DapContinue <CR>", { desc = "Start or continue the debugger" })
 --
 -- whichkey
 --
@@ -303,29 +304,89 @@ vim.api.nvim_create_autocmd("FileType", {
   pattern = { "cpp", "c", "hpp", "h" }, -- Filetypes to match
   group = cpp_mappings_group, -- Assign to the group
   callback = function()
-    map("n", "<leader>mr", "<cmd>make run<CR>", { buffer = true, desc = "make run" })
-    map(
-      "n",
-      "<leader>md",
-      "<cmd>make debug<CR><cmd> DapContinue <CR>main_debug<CR>",
-      { buffer = true, desc = "make debug" }
-    )
-    map("n", "<leader>mc", "<cmd>make clean<CR>", { buffer = true, desc = "make clean" })
+    -- map("n", "<leader>mr", "<cmd>make run<CR>", { buffer = true, desc = "make run" })
+    -- map(
+    --   "n",
+    --   "<leader>md",
+    --   "<cmd>make debug<CR><cmd> DapContinue <CR>main_debug<CR>",
+    --   { buffer = true, desc = "make debug" }
+    -- )
+    -- map("n", "<leader>mc", "<cmd>make clean<CR>", { buffer = true, desc = "make clean" })
     -- map("n", "<leader>r", ":w<CR>:make -C %:p:h run FILE=%:p<CR>")
     -- map("n", "<leader>R", ":w<CR>:!kitty --hold -d %:p:h make run %:t:r & <CR><CR>")
 
     -- map("n", "<leader>rr", ":w | !kitty --hold --title 'c++' --start-as=fullscreen cr \"%\" &<CR><CR>")
 
-    local run_kitty = " kitty --hold -o allow_remote_control=yes --listen-on unix:/tmp/kitty_cpp "
+    -- local run_kitty = " kitty --hold -o allow_remote_control=yes --listen-on unix:/tmp/kitty_cpp "
+    -- local send_to_kitty = " kitten @ --to unix:/tmp/kitty_cpp send-text "
+    -- local run_cr = 'cr "%:p"'
+    -- map("n", "<leader>rr", ":w | !(" .. send_to_kitty .. run_cr .. "\\\\r) || (" .. run_kitty .. run_cr .. ") &<CR><CR>", {desc = "run c++ file in release mode"})
+    -- map("n", "<leader>rd", ":w | !(" .. send_to_kitty .. run_cr .. " -d \\\\r) || (" .. run_kitty .. run_cr .. " -d ) &<CR><CR>", {desc = "run c++ file in debug mode"})
+    --
 
-    local send_to_kitty = " kitten @ --to unix:/tmp/kitty_cpp send-text "
+    map("n", "<leader>rr", ":vsplit term://cr '%:p'<CR>A", { desc = "run current c++ file in release mode" })
+    map("n", "<leader>rd", ":vsplit term://cr '%:p' -d<CR>A", { desc = "run current c++ file in release mode" })
 
-    local run_cr = 'cr "%:p"\\\\r'
-
-    local send_to_kitty_cr = "(" .. send_to_kitty .. run_cr .. ")"
-    local run_kitty_cr = "(" .. run_kitty .. run_cr .. ")"
-
-    map("n", "<leader>rr", ":w | !" .. send_to_kitty_cr .. " || " .. run_kitty_cr .. "&<CR><CR>")
-
+    -- map("n", "<leader>rr", function()
+    --   require("nvchad.term").runner {
+    --     cmd = "cr '%:p'",
+    --     pos ="vsp",
+    --     size=0.5,
+    --     id = "vtoggleTerm",
+    --     clear_cmd = "",
+    --   }
+    -- end)
   end,
 })
+
+-- map("n", "<leader>b", "<cmd> DapToggleBreakpoint <CR>", { desc = "Add breakpoint at line" })
+-- map("n", "<C-.>", "<cmd> DapContinue <CR>", { desc = "Start or continue the debugger" })
+
+-- map("n", "<leader>dq", function() require("dapui").close() end, { desc = "debugger ui close" })
+-- map("n", "<leader>ds", ":DapContinue<CR>1<CR>")
+-- map("n", "<leader>dl", function() require("dap").run_last() end)
+-- map("n", )
+--
+local dap = require("dap")
+local dapui = require("dapui")
+map("n", "<C-'>", function() dap.run_to_cursor() end)
+map("n", "<C-Up>", function() dap.step_back() end)
+map("n", "<C-Down>", function() dap.step_over() end)
+map("n", "<C-Left>", function() dap.step_out() end)
+map("n", "<C-Right>", function() dap.step_into() end)
+map("n", "<C-PageUp>", function() dap.reverse_continue() end)
+map("n", "<C-PageDown>", function() dap.continue() end)
+map("n", "<C-Esc>", function() dap.terminate(); dapui.close() end)
+map("n", "<C-m>", function() dap.toggle_breakpoint() end)
+
+
+--
+-- vim.keymap.set("n", "<Leader>b", function()
+--   require("dap").toggle_breakpoint()
+-- end)
+-- vim.keymap.set("n", "<Leader>B", function()
+--   require("dap").set_breakpoint()
+-- end)
+-- vim.keymap.set("n", "<Leader>lp", function()
+--   require("dap").set_breakpoint(nil, nil, vim.fn.input "Log point message: ")
+-- end)
+-- vim.keymap.set("n", "<Leader>dr", function()
+--   require("dap").repl.open()
+-- end)
+-- vim.keymap.set("n", "<Leader>dl", function()
+--   require("dap").run_last()
+-- end)
+-- vim.keymap.set({ "n", "v" }, "<Leader>dh", function()
+--   require("dap.ui.widgets").hover()
+-- end)
+-- vim.keymap.set({ "n", "v" }, "<Leader>dp", function()
+--   require("dap.ui.widgets").preview()
+-- end)
+-- vim.keymap.set("n", "<Leader>df", function()
+--   local widgets = require "dap.ui.widgets"
+--   widgets.centered_float(widgets.frames)
+-- end)
+-- vim.keymap.set("n", "<Leader>ds", function()
+--   local widgets = require "dap.ui.widgets"
+--   widgets.centered_float(widgets.scopes)
+-- end)
